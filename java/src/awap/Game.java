@@ -15,6 +15,10 @@ public class Game {
 			Logger.log(newState.getError().get());
 			return Optional.absent();
 		}
+		
+		if(currentBoard == null) {
+			currentBoard = new OurBoard(this);
+		}
 
 		if (newState.getMove() != -1) {
 			return Optional.fromNullable(findMove());
@@ -24,7 +28,9 @@ public class Game {
 		if (newState.getNumber().isPresent()) {
 			number = newState.getNumber().get();
 		}
-
+		
+		
+		
 		return Optional.absent();
 	}
 	
@@ -34,6 +40,7 @@ public class Game {
 	
 	private Move findMove() {
 		Logger.log("findMove called");
+		
 		
 		SearchType search = SearchType.DFS;
 		BlockPlacement toPlace;
