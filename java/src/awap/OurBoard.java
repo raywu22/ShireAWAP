@@ -75,6 +75,7 @@ public class OurBoard {
 		    		scoreOfNewBlock *= 3;
 		    }
 	    }
+	    updateCorners();
 	    return new OurBoard(this.getCorners(),copyOfBlockPlacements, this.score + scoreOfNewBlock, pointsToAdd);
 	}
 	/**
