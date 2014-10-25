@@ -10,6 +10,8 @@ public class OurBoard {
 	private List<Point> allFilledPoints;
 	private List<Block> availableBlocks;
 	
+	private int score;
+	
 	public OurBoard(List<Point> corner, ArrayList<Block> blocks,List<Point> filledPoints) {
 		this.corners         = corner;
 		this.boardBlocks     = blocks;
@@ -48,7 +50,7 @@ public class OurBoard {
 	 * 
 	 * @return
 	 */
-	public List<Block> getBlocksUsed() {
+	public List<BlockPlacement> getBlocksUsed() {
 		return null;
 	}
 	
@@ -76,5 +78,9 @@ public class OurBoard {
 	public ArrayList<Point> orderBlocksForPath() {
 		
 		return null;
+	}
+	
+	public int getScore() {
+		return score;
 	}
 }

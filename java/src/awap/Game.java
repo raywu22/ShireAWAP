@@ -27,6 +27,11 @@ public class Game {
 	}
 
 	private Move findMove() {
+		
+		BlockPlacement toPlace = Search.search(currentState, state.getBlocks(), this);
+		
+		return new Move(state.getBlocks().indexOf(toPlace.getBlock()), toPlace.getRotation(), toPlace.getLocation().getX(), toPlace.getLocation().getY());
+		/*
 		int N = state.getDimension();
 		List<Block> blocks = state.getBlocks().get(number);
 
@@ -42,7 +47,7 @@ public class Game {
 			}
 		}
 
-		return new Move(0, 0, 0, 0);
+		return new Move(0, 0, 0, 0);*/
 	}
 
 	private int getPos(int x, int y) {
