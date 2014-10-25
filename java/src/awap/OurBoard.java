@@ -1,11 +1,12 @@
 package awap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class OurBoard {
-	private ArrayList<BlockPlacement> boardBlockPlacements;
+	private List<BlockPlacement> boardBlockPlacements;
 	private List<Point> corners;
 	private List<Block> availableBlocks;
 	/**
@@ -15,7 +16,7 @@ public class OurBoard {
 	 * @param filledPoints - ALL filled points on the board in the for List(isOurPoint,xCoord,yCoord) where
 	 *                       isOurPoint = 0 if it is our point and isOurPoint = 1 if other point
 	 */
-	public OurBoard(List<Point> corner, ArrayList<BlockPlacement> blockPlacements) {
+	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements) {
 	    //TODO set this.corners to new available corners
 		this.corners = corner;
 		this.boardBlockPlacements = blockPlacements;
@@ -28,8 +29,15 @@ public class OurBoard {
 	 * @param p - point where the block is placed
 	 * @return OurBoard
 	 */
-	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo) {
-	    
+	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo,int rotation) {
+	    BlockPlacement toAddBlockPlacement = new BlockPlacement(blockToAdd,pointAddingTo,rotation);
+	    List<BlockPlacement> copyOfBlockPlacements = new ArrayList<>(this.getBlockPlacements());
+	    copyOfBlockPlacements.add(toAddBlockPlacement);
+	    return new OurBoard(this.getCorners(),copyOfBlockPlacements);
+	}
+	
+	public List<BlockPlacement> getBlockPlacements(){
+	    return this.boardBlockPlacements;
 	}
 	
 	/**
