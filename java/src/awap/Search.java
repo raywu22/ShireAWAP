@@ -11,7 +11,7 @@ public class Search {
 		HashSet<OurBoard> visited = new HashSet<>(); // TODO: add equals and hashmap to ourboard
 		
 		List<OurBoard> agenda = new ArrayList<>();
-		agenda.add(new OurBoard(game));
+		agenda.add(new OurBoard(game)); //TODO; Check if this is correct
 		
 		// find a good placement of blocks
 		while(agenda.get(0).getPoints().contains(goal)) {
@@ -37,10 +37,10 @@ public class Search {
 		
 		if(agenda.get(0) != null) {
 			// decide which to place first
-			List<BlockPlacement> originalBlocksUsed = originalState.getBlocksUsed();
+			List<BlockPlacement> originalBlocksUsed = originalState.getBlockPlacements();
 			int closestDist = Integer.MAX_VALUE;
 			BlockPlacement blockToPlace = null;
-			for(BlockPlacement block : agenda.get(0).getBlocksUsed()) {
+			for(BlockPlacement block : agenda.get(0).getBlockPlacements()) {
 				if(originalBlocksUsed.contains(block))
 					continue;
 				if(originalState.checkForConflicts(blockToPlace)) { //TODO: implement this
