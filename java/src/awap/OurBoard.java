@@ -117,8 +117,15 @@ public class OurBoard {
 	            updatedCorners.add(k);
 	        }
 	    }
+	    Set<Point> badPoints = new HashSet<>();
 	    
-	    for (i)
+	    for (BlockPlacement placement:this.getBlockPlacements()){
+	        for (Point offset:placement.getBlock().getOffsets()){
+	            Point pointToAdd = placement.getLocation();
+	            badPoints.add(new Point(pointToAdd.getX()+offset.getX(),pointToAdd.getY()+offset.getY()));
+	        }
+	    }
+ 
 	}
 	/**
 	 * @return
