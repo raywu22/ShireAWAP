@@ -1,7 +1,9 @@
 package awap;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class OurBoard {
 	Game originalState; // this is the state that the server has told us is the current state (before we start a search)
@@ -25,10 +27,16 @@ public class OurBoard {
 	 * @param filledPoints - ALL filled points on the board in the for List(isOurPoint,xCoord,yCoord) where
 	 *                       isOurPoint = 0 if it is our point and isOurPoint = 1 if other point
 	 */
-	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements) {
+
+	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements, int score) {
 	    //TODO set this.corners to new available corners
 		this.corners = corner;
 		this.boardBlockPlacements = blockPlacements;
+		this.score = score;
+	}
+	
+	public void setGame(Game game) {
+		this.originalState = game;
 	}
 	
 	/**
@@ -38,38 +46,82 @@ public class OurBoard {
 	 * @return OurBoard
 	 */
 	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo,int rotation) {
-	    BlockPlacement toAddBlockPlacement = new BlockPlacement(blockToAdd,pointAddingTo,rotation);
-	    List<BlockPlacement> copyOfBlockPlacements = new ArrayList<>(this.getBlockPlacements());
-	    copyOfBlockPlacements.add(toAddBlockPlacement);
-	    return new OurBoard(this.getCorners(),copyOfBlockPlacements);
+		BlockPlacement toAddBlockPlacement = new BlockPlacement(blockToAdd,pointAddingTo,rotation);
+		return addBlock(toAddBlockPlacement);
 	}
 	
+	public OurBoard addBlock(BlockPlacement blockPlacement) {
+	    Point pointAddingTo = blockPlacement.getLocation();
+	    Block blockToAdd = blockPlacement.getBlock();
+	    List<BlockPlacement> copyOfBlockPlacements = new ArrayList<>(this.getBlockPlacements());
+	    copyOfBlockPlacements.add(blockPlacement);
+	    int scoreOfNewBlock = blockToAdd.getOffsets().size();
+	    Block rotated = blockPlacement.getRotatedBlock();
+	    for(List<Integer> bonus : originalState.getState().getBonusSquares()) {
+		    for(Point offset : rotated.getOffsets()) {
+		    	int x = offset.getX() + pointAddingTo.getX();
+		    	int y = offset.getY() + pointAddingTo.getY();
+		    	if(bonus.get(0) == x && bonus.get(1) == y)
+		    		scoreOfNewBlock *= 3;
+		    }
+	    }
+	    return new OurBoard(this.getCorners(),copyOfBlockPlacements, this.score + scoreOfNewBlock);
+	}
+	/**
+	 * @return block placements in our board
+	 */
 	public List<BlockPlacement> getBlockPlacements(){
 	    return this.boardBlockPlacements;
 	}
 	
 	/**
-	 * 
 	 * @return - New list of places where a block can be placed
 	 */
 	public List<Point> getCorners() {
-		return null;
+		return corners;
 	}
-	
 	/**
-	 * 
+	 * updates corners to valid new corners
+	 */
+	public void updateCorners(){
+	    BlockPlacement recentBlockPlacement = this.getBlockPlacements().get(this.getBlockPlacements().size()-1);
+	    Block individualBlock = recentBlockPlacement.getBlock();
+	    List<Point> possibleCorners = new ArrayList<>();
+	    Set<Point> allSides = new HashSet<>();
+	    for (Point side:individualBlock.getOffsets()){
+            allSides.add(new Point(side.getX()+1,side.getY()));
+            allSides.add(new Point(side.getX(),side.getY()+1));
+            allSides.add(new Point(side.getX()-1,side.getY()));
+            allSides.add(new Point(side.getX(),side.getY()-1));
+	    }
+	    for (Point offset:individualBlock.getOffsets()){
+	        possibleCorners.add(new Point(offset.getX()+1,offset.getY()+1));
+	        possibleCorners.add(new Point(offset.getX()+1,offset.getY()-1));
+	        possibleCorners.add(new Point(offset.getX()-1,offset.getY()+1));
+	        possibleCorners.add(new Point(offset.getX()-1,offset.getY()-1));
+	    }
+	    for (int i=possibleCorners.size()-1;i==-1;i--){
+	        if (allSides.contains(possibleCorners.get(i)) || individualBlock.getOffsets().contains(possibleCorners.get(i))){
+	            possibleCorners.remove(i);
+	        }
+	    }
+	    List<Point> newPossibleCorners = new ArrayList<>();
+	    for (Point n:possibleCorners){
+	        newPossibleCorners.add(new Point(n.getX()+recentBlockPlacement.getLocation().getX(),n.getY()+recentBlockPlacement.getLocation().getY()));
+	    }
+	    
+	    List<Point> updatedCorners = new ArrayList<>(corners);
+
+	    for (Point k:newPossibleCorners){
+	        if (!updatedCorners.contains(k)){
+	            updatedCorners.add(k);
+	        }
+	    }
+	}
+	/**
 	 * @return
 	 */
 	public List<Point> getPoints() {
-		
-		return null;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public List<BlockPlacement> getBlocksUsed() {
 		return null;
 	}
 	
@@ -78,7 +130,7 @@ public class OurBoard {
 	 * @return
 	 */
 	public List<Block> getBlocksAvailable() {
-		return null;
+		return originalState.getBlocks();
 	}
 	
 	/**

@@ -7,6 +7,8 @@ import com.google.common.base.Optional;
 public class Game {
 	private State state;
 	private Integer number;
+	
+	OurBoard currentBoard;
 
 	public Optional<Move> updateState(State newState) {
 		if (newState.getError().isPresent()) {
@@ -28,8 +30,9 @@ public class Game {
 
 	private Move findMove() {
 		
-		BlockPlacement toPlace = Search.search(currentState, state.getBlocks(), this);
+		BlockPlacement toPlace = Search.search(currentBoard, this);
 		
+		currentBoard.addBlock(toPlace);
 		return new Move(state.getBlocks().indexOf(toPlace.getBlock()), toPlace.getRotation(), toPlace.getLocation().getX(), toPlace.getLocation().getY());
 		/*
 		int N = state.getDimension();
@@ -104,5 +107,13 @@ public class Game {
 			}
 		}
 		return min;
+	}
+	
+	public State getState() {
+		return state;
+	}
+	
+	public List<Block> getBlocks() {
+		return state.getBlocks().get(number);
 	}
 }
