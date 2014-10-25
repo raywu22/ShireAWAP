@@ -3,6 +3,7 @@ package awap;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
 
 public class OurBoard {
 	private ArrayList<Block> boardBlocks;
@@ -10,11 +11,11 @@ public class OurBoard {
 	private List<Point> allFilledPoints;
 	private List<Block> availableBlocks;
 	
-	public OurBoard(List<Point> corner, ArrayList<Block> blocks,List<Point> filledPoints) {
+	public OurBoard(List<Point> corner, ArrayList<Block> blocks,List<Point> filledPoints, List<Block> avalBlocks) {
 		this.corners         = corner;
 		this.boardBlocks     = blocks;
-		this.allFilledPoints= filledPoints;
-//		availableBlocks = totalDomain - blocks;
+		this.allFilledPoints = filledPoints;
+		this.availableBlocks = avalBlocks;
 	}
 	
 	/**
@@ -66,15 +67,33 @@ public class OurBoard {
 	 * @return
 	 */
 	public ArrayList<Point> orderCornersForPath(Point goal) {
+		ArrayList<Point> orderedPoints = new ArrayList<Point>();
+		ArrayList<Integer> orderedDist = new ArrayList<Integer>();
+		for(Point corner : corners) {
+			int dist = Math.abs((goal.getX() - corner.getX()) + (goal.getY() - goal.getY()));
+//			distMap.put(corner, dist);
+			if(orderedDist.isEmpty()) {
+				orderedDist.add(dist);
+				orderedPoints.add(corner);
+			}
+			else {
+				for(int i = orderedDist.size()-1; i >= 0; i--) {
+					if(orderedDist.get(i) > dist) {
+						orderedDist.add(i, dist);
+						orderedPoints.add(i, corner);
+					}
+				}
+			}	
+		}
 		return null;
 	}
+	
 	
 	/**
 	 * Order available blocks based on largest Manhattan distance
 	 * @return
 	 */
-	public ArrayList<Point> orderBlocksForPath() {
-		
+	public ArrayList<Block> orderBlocksForPath() {
 		return null;
 	}
 }
