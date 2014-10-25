@@ -25,7 +25,7 @@ public class Search {
 							
 							boolean valid = false;// TODO: currentState.canPlace(available, placeAt);
 							if(valid) {
-								OurBoard newState = currentState.addBlock(available, placeAt);
+								OurBoard newState = currentState.addBlock(available, placeAt, rot);
 								if(newState.getScore() > bestScore) {
 									bestScore = newState.getScore();
 									bestState = newState;
@@ -48,10 +48,10 @@ public class Search {
 		
 		if(bestState != null) {
 			// decide which to place first
-			List<BlockPlacement> originalBlocksUsed = originalState.getBlocksUsed();
+			List<BlockPlacement> originalBlocksUsed = originalState.getBlockPlacements();
 			int closestDist = Integer.MAX_VALUE;
 			BlockPlacement blockToPlace = null;
-			for(BlockPlacement block : bestState.getBlocksUsed()) {
+			for(BlockPlacement block : bestState.getBlockPlacements()) {
 				if(originalBlocksUsed.contains(block))
 					continue;
 				

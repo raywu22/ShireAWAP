@@ -25,10 +25,15 @@ public class OurBoard {
 	 * @param filledPoints - ALL filled points on the board in the for List(isOurPoint,xCoord,yCoord) where
 	 *                       isOurPoint = 0 if it is our point and isOurPoint = 1 if other point
 	 */
-	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements) {
+	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements, int score) {
 	    //TODO set this.corners to new available corners
 		this.corners = corner;
 		this.boardBlockPlacements = blockPlacements;
+		this.score = score;
+	}
+	
+	public void setGame(Game game) {
+		this.originalState = game;
 	}
 	
 	/**
@@ -38,10 +43,26 @@ public class OurBoard {
 	 * @return OurBoard
 	 */
 	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo,int rotation) {
-	    BlockPlacement toAddBlockPlacement = new BlockPlacement(blockToAdd,pointAddingTo,rotation);
+		BlockPlacement toAddBlockPlacement = new BlockPlacement(blockToAdd,pointAddingTo,rotation);
+		return addBlock(toAddBlockPlacement);
+	}
+	
+	public OurBoard addBlock(BlockPlacement blockPlacement) {
+	    Point pointAddingTo = blockPlacement.getLocation();
+	    Block blockToAdd = blockPlacement.getBlock();
 	    List<BlockPlacement> copyOfBlockPlacements = new ArrayList<>(this.getBlockPlacements());
-	    copyOfBlockPlacements.add(toAddBlockPlacement);
-	    return new OurBoard(this.getCorners(),copyOfBlockPlacements);
+	    copyOfBlockPlacements.add(blockPlacement);
+	    int scoreOfNewBlock = blockToAdd.getOffsets().size();
+	    Block rotated = blockPlacement.getRotatedBlock();
+	    for(List<Integer> bonus : originalState.getState().getBonusSquares()) {
+		    for(Point offset : rotated.getOffsets()) {
+		    	int x = offset.getX() + pointAddingTo.getX();
+		    	int y = offset.getY() + pointAddingTo.getY();
+		    	if(bonus.get(0) == x && bonus.get(1) == y)
+		    		scoreOfNewBlock *= 3;
+		    }
+	    }
+	    return new OurBoard(this.getCorners(),copyOfBlockPlacements, this.score + scoreOfNewBlock);
 	}
 	
 	public List<BlockPlacement> getBlockPlacements(){
@@ -68,16 +89,8 @@ public class OurBoard {
 	 * 
 	 * @return
 	 */
-	public List<BlockPlacement> getBlocksUsed() {
-		return null;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
 	public List<Block> getBlocksAvailable() {
-		return null;
+		return originalState.getBlocks();
 	}
 	
 	/**
