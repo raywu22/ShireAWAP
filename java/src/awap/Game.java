@@ -27,6 +27,11 @@ public class Game {
 	}
 
 	private Move findMove() {
+		
+		BlockPlacement toPlace = Search.search(currentState, state.getBlocks(), this);
+		
+		return new Move(state.getBlocks().indexOf(toPlace.getBlock()), toPlace.getRotation(), toPlace.getLocation().getX(), toPlace.getLocation().getY());
+		/*
 		int N = state.getDimension();
 		List<Block> blocks = state.getBlocks().get(number);
 
@@ -42,14 +47,14 @@ public class Game {
 			}
 		}
 
-		return new Move(0, 0, 0, 0);
+		return new Move(0, 0, 0, 0);*/
 	}
 
 	private int getPos(int x, int y) {
 		return state.getBoard().get(x).get(y);
 	}
 
-	private boolean canPlace(Block block, Point p) {
+	public boolean canPlace(Block block, Point p) {
 		boolean onAbsCorner = false, onRelCorner = false;
 		int N = state.getDimension() - 1;
 
@@ -81,5 +86,23 @@ public class Game {
 		}
 
 		return !((getPos(corner.getX(), corner.getY()) < 0 && !onAbsCorner) || (!onAbsCorner && !onRelCorner));
+	}
+	
+	public int mahattanDistanceToNearestCompetitor(Point point) {
+		int N = state.getDimension();
+		int px = point.getX();
+		int py = point.getY();
+		int min = Integer.MAX_VALUE;
+		for(int x = 0; x < N; x++) {
+			for(int y = 0; y < N; y++) {
+				int val = getPos(x,y);
+				if(val != number && val != 0) {
+					int dist = Math.abs(x-px) + Math.abs(y-py);
+					if(dist < min)
+						min = dist;
+				}
+			}
+		}
+		return min;
 	}
 }
