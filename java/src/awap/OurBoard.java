@@ -5,26 +5,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OurBoard {
-	public ArrayList<Block> boardBlocks;
-	public List<Point> corners;
-	public List<Block> availableBlocks;
+	private ArrayList<Block> boardBlocks;
+	private List<Point> corners;
+	private List<Point> allFilledPoints;
+	private List<Block> availableBlocks;
 	
-	public OurBoard(List<Point> corner, ArrayList<Block> blocks) {
+	public OurBoard(List<Point> corner, ArrayList<Block> blocks,List<Point> filledPoints) {
 		this.corners         = corner;
 		this.boardBlocks     = blocks;
+		this.allFilledPoints= filledPoints;
 //		availableBlocks = totalDomain - blocks;
 	}
 	
 	/**
-	 * 
-	 * @param b - block to be placed
+	 * producer method
+	 * @param b - block to be placed, assume that it is always able to be added
 	 * @param p - point where the block is placed
 	 * @return OurBoard
 	 */
-	public OurBoard addBlock(Block b, Point p) {
-		
-		
-		
+	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo) {
+	    
 		return null;
 	}
 	
