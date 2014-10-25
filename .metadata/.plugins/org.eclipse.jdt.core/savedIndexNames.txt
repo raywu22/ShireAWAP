@@ -1,0 +1,18 @@
+INDEX VERSION 1.127+/home/jonathanlim/Documents/Code/Java/ShireAWAP/.metadata/.plugins/org.eclipse.jdt.core
+3693448964.index
+2064907913.index
+3305932411.index
+2913048097.index
+2031085872.index
+3832095003.index
+1419963604.index
+3901361578.index
+726145421.index
+207581026.index
+2144917558.index
+1225813827.index
+3689772550.index
+954478507.index
+1453598739.index
+4201408329.index
+1279675953.index
