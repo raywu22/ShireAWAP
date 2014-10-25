@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
 
 public class OurBoard {
 	private List<BlockPlacement> boardBlockPlacements;
 	private List<Point> corners;
 	private List<Block> availableBlocks;
+	private int score;
+
 	/**
 	 * 
 	 * @param corner - gives list of already available corners
@@ -20,7 +23,6 @@ public class OurBoard {
 	    //TODO set this.corners to new available corners
 		this.corners = corner;
 		this.boardBlockPlacements = blockPlacements;
-//		availableBlocks = totalDomain - blocks;
 	}
 	
 	/**
@@ -60,7 +62,7 @@ public class OurBoard {
 	 * 
 	 * @return
 	 */
-	public List<Block> getBlocksUsed() {
+	public List<BlockPlacement> getBlocksUsed() {
 		return null;
 	}
 	
@@ -78,15 +80,40 @@ public class OurBoard {
 	 * @return
 	 */
 	public ArrayList<Point> orderCornersForPath(Point goal) {
-		return null;
+		ArrayList<Point> orderedPoints = new ArrayList<Point>();
+		ArrayList<Integer> orderedDist = new ArrayList<Integer>();
+		for(Point corner : corners) {
+			int dist = Math.abs((goal.getX() - corner.getX()) + (goal.getY() - goal.getY()));
+//			distMap.put(corner, dist);
+			if(orderedDist.isEmpty()) {
+				orderedDist.add(dist);
+				orderedPoints.add(corner);
+			}
+			else {
+				for(int i = orderedDist.size()-1; i >= 0; i--) {
+					if(orderedDist.get(i) > dist) {
+						orderedDist.add(i, dist);
+						orderedPoints.add(i, corner);
+					}
+				}
+			}	
+		}
+		return orderedPoints;
 	}
+	
 	
 	/**
 	 * Order available blocks based on largest Manhattan distance
 	 * @return
 	 */
-	public ArrayList<Point> orderBlocksForPath() {
-		
+	public ArrayList<Block> orderBlocksForPath() {
+		for(Block block : availableBlocks) {
+			
+		}
 		return null;
+	}
+	
+	public int getScore() {
+		return score;
 	}
 }

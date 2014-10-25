@@ -1,14 +1,13 @@
 package awap;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
 public class Search {
 	
-	public void search(OurBoard currentState) {
+	public static BlockPlacement search(OurBoard currentState, Game game) {
+		OurBoard originalState = currentState;
 		HashSet<OurBoard> visited = new HashSet<>(); // TODO: add equals and hashmap to ourboard
 		
 		List<OurBoard> agenda = new ArrayList<>();
@@ -16,6 +15,7 @@ public class Search {
 		OurBoard bestState = null;
 		int bestScore = 0;
 		
+		// find a good placement of blocks
 		while(currentState != null) {
 			for(Point corner : currentState.getCorners()) {
 				for(Block available : currentState.getBlocksAvailable()) {
@@ -44,6 +44,27 @@ public class Search {
 				currentState = null;
 		}
 		
+		if(bestState != null) {
+			// decide which to place first
+			List<BlockPlacement> originalBlocksUsed = originalState.getBlocksUsed();
+			int closestDist = Integer.MAX_VALUE;
+			BlockPlacement blockToPlace = null;
+			for(BlockPlacement block : bestState.getBlocksUsed()) {
+				if(originalBlocksUsed.contains(block))
+					continue;
+				
+				Point p = block.getLocation();
+				int dist = game.mahattanDistanceToNearestCompetitor(p);
+				
+				if(dist < closestDist) {
+					closestDist = dist;
+					blockToPlace = block;
+				}
+			}
+			
+			return blockToPlace;
+		}
 		
+		throw new RuntimeException();
 	}
 }
