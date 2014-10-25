@@ -11,7 +11,7 @@ public class Search {
 		HashSet<OurBoard> visited = new HashSet<>(); // TODO: add equals and hashmap to ourboard
 		
 		List<OurBoard> agenda = new ArrayList<>();
-		agenda.add(new OurBoard(game));
+		agenda.add(new OurBoard(game)); //TODO; Check if this is correct
 		
 		// find a good placement of blocks
 		while(agenda.get(0).getPoints().contains(goal)) {
