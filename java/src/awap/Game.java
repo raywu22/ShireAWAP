@@ -29,12 +29,17 @@ public class Game {
 	}
 
 	private Move findMove() {
+		/*
+		Logger.log("findMove called");
 		
 		BlockPlacement toPlace = Search.search(currentBoard, this);
 		
+		Logger.log("search finished");
+		
 		currentBoard.addBlock(toPlace);
 		return new Move(state.getBlocks().indexOf(toPlace.getBlock()), toPlace.getRotation(), toPlace.getLocation().getX(), toPlace.getLocation().getY());
-		/*
+		*/
+		
 		int N = state.getDimension();
 		List<Block> blocks = state.getBlocks().get(number);
 
@@ -50,7 +55,7 @@ public class Game {
 			}
 		}
 
-		return new Move(0, 0, 0, 0);*/
+		return new Move(0, 0, 0, 0);
 	}
 
 	private int getPos(int x, int y) {
@@ -99,7 +104,7 @@ public class Game {
 		for(int x = 0; x < N; x++) {
 			for(int y = 0; y < N; y++) {
 				int val = getPos(x,y);
-				if(val != number && val != 0) {
+				if(val != number && val >= 0 && val <= 3) {
 					int dist = Math.abs(x-px) + Math.abs(y-py);
 					if(dist < min)
 						min = dist;
@@ -115,5 +120,14 @@ public class Game {
 	
 	public List<Block> getBlocks() {
 		return state.getBlocks().get(number);
+	}
+	
+	public Point getStartCorner() {
+		int N = state.getDimension();
+		
+		Point[] corners = { new Point(0, 0), new Point(N, 0), new Point(N, N),
+				new Point(0, N) };
+		
+		return corners[number];
 	}
 }

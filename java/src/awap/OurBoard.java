@@ -19,6 +19,8 @@ public class OurBoard {
 		boardBlockPlacements = new ArrayList<>();
 		corners = new ArrayList<>();
 		availableBlocks = new ArrayList<>();
+		
+		corners.add(game.getStartCorner());
 		pointsCovered = new ArrayList<Point>();
 	}
 	

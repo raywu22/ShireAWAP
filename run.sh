@@ -1,14 +1,14 @@
 #!/bin/bash
 
-RUN_AI="python python/game.py"
+#RUN_AI="python python/game.py"
 
 # for Java, uncomment this line:
-# RUN_AI="java -jar java/target/AWAP-0.0.1-SNAPSHOT.jar"
+ RUN_AI="java -jar java/build.jar"
 
 # for CPP, uncomment this line:
 # RUN_AI="./cpp/game"
 
-TEAM_ID="test"
+TEAM_ID="shir229"
 FAST=0
 
 trap "pkill -P $$" SIGTERM SIGKILL EXIT
