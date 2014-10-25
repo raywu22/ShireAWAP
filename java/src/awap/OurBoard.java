@@ -5,9 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OurBoard {
-	private ArrayList<Block> boardBlocks;
+	private ArrayList<BlockPlacement> boardBlockPlacements;
 	private List<Point> corners;
-	private List<List<Integer>> allFilledPoints;
 	private List<Block> availableBlocks;
 	/**
 	 * 
@@ -16,11 +15,10 @@ public class OurBoard {
 	 * @param filledPoints - ALL filled points on the board in the for List(isOurPoint,xCoord,yCoord) where
 	 *                       isOurPoint = 0 if it is our point and isOurPoint = 1 if other point
 	 */
-	public OurBoard(List<Point> corner, ArrayList<BlockPlacements> blocks) {
+	public OurBoard(List<Point> corner, ArrayList<BlockPlacement> blockPlacements) {
 	    //TODO set this.corners to new available corners
-		this.corners         = corner;
-		this.boardBlocks     = blocks;
-		this.allFilledPoints= filledPoints;
+		this.corners = corner;
+		this.boardBlockPlacements = blockPlacements;
 //		availableBlocks = totalDomain - blocks;
 	}
 	
@@ -31,7 +29,7 @@ public class OurBoard {
 	 * @return OurBoard
 	 */
 	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo) {
-	    		
+	    
 	}
 	
 	/**
