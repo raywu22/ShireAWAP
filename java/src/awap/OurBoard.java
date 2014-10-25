@@ -105,9 +105,20 @@ public class OurBoard {
 	            possibleCorners.remove(i);
 	        }
 	    }
-	    List<Point> updatedCorners = new ArrayList<>(corners);
-	    updatedCorners.addAll(possibleCorners);	    
+	    List<Point> newPossibleCorners = new ArrayList<>();
+	    for (Point n:possibleCorners){
+	        newPossibleCorners.add(new Point(n.getX()+recentBlockPlacement.getLocation().getX(),n.getY()+recentBlockPlacement.getLocation().getY()));
+	    }
 	    
+	    List<Point> updatedCorners = new ArrayList<>(corners);
+
+	    for (Point k:newPossibleCorners){
+	        if (!updatedCorners.contains(k)){
+	            updatedCorners.add(k);
+	        }
+	    }
+	    
+	    for (i)
 	}
 	/**
 	 * @return
