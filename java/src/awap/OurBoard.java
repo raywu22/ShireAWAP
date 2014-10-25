@@ -5,12 +5,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class OurBoard {
+	Game originalState; // this is the state that the server has told us is the current state (before we start a search)
+	
 	private ArrayList<BlockPlacement> boardBlockPlacements;
 	private List<Point> corners;
 	private List<Block> availableBlocks;
 	
 	private int score;
 
+	public OurBoard(Game game) {
+		this.originalState = game;
+		boardBlockPlacements = new ArrayList<>();
+		corners = new ArrayList<>();
+		availableBlocks = new ArrayList<>();
+	}
+	
 	/**
 	 * 
 	 * @param corner - gives list of already available corners
@@ -82,6 +91,29 @@ public class OurBoard {
 	public ArrayList<Point> orderBlocksForPath() {
 		
 		return null;
+	}
+	
+	public boolean checkForConflicts(BlockPlacement placement) {
+		boolean canPlace = originalState.canPlace(placement.getBlock().rotate(placement.getRotation()), placement.getLocation());
+		if(!canPlace)
+			return false;
+		int x = placement.getLocation().getX();
+		int y = placement.getLocation().getY();
+		Block rotated = placement.getRotatedBlock();
+		for(BlockPlacement otherBlocks : boardBlockPlacements) {
+			int ox = otherBlocks.getLocation().getX();
+			int oy = otherBlocks.getLocation().getY();
+			Block otherRotated = otherBlocks.getRotatedBlock();
+			for(Point offset : rotated.getOffsets()) {
+				for(Point otherOffset : otherRotated.getOffsets()) {
+					if((offset.getX() + x == otherOffset.getX() + ox) && (offset.getY() + y == otherOffset.getY() + oy)) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	public int getScore() {

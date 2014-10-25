@@ -19,19 +19,21 @@ public class Search {
 		while(currentState != null) {
 			for(Point corner : currentState.getCorners()) {
 				for(Block available : currentState.getBlocksAvailable()) {
-					for(Point offset : available.getOffsets()) {
-						Point placeAt = corner.subtract(offset);
-						
-						boolean valid = false;// TODO: currentState.canPlace(available, placeAt);
-						if(valid) {
-							OurBoard newState = currentState.addBlock(available, placeAt);
-							if(newState.getScore() > bestScore) {
-								bestScore = newState.getScore();
-								bestState = newState;
-							}
-							if(!visited.contains(newState)) {
-								visited.add(newState);
-								agenda.add(newState);
+					for(int rot = 0; rot < 4; rot++) {
+						for(Point offset : available.getOffsets()) {
+							Point placeAt = corner.subtract(offset);
+							
+							boolean valid = false;// TODO: currentState.canPlace(available, placeAt);
+							if(valid) {
+								OurBoard newState = currentState.addBlock(available, placeAt);
+								if(newState.getScore() > bestScore) {
+									bestScore = newState.getScore();
+									bestState = newState;
+								}
+								if(!visited.contains(newState)) {
+									visited.add(newState);
+									agenda.add(newState);
+								}
 							}
 						}
 					}

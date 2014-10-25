@@ -22,4 +22,8 @@ public class BlockPlacement {
 	public int getRotation() {
 		return rotation;
 	}
+	
+	public Block getRotatedBlock() {
+		return block.rotate(rotation);
+	}
 }
