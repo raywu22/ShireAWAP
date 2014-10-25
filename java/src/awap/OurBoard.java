@@ -125,7 +125,16 @@ public class OurBoard {
 	            badPoints.add(new Point(pointToAdd.getX()+offset.getX(),pointToAdd.getY()+offset.getY()));
 	        }
 	    }
- 
+	    Set<Point> badPointsWithSides = new HashSet<>(badPoints);
+	    for (Point bad:badPoints){
+	        badPointsWithSides.add(new Point(bad.getX()+1,bad.getY()));
+            badPointsWithSides.add(new Point(bad.getX(),bad.getY()+1));
+            badPointsWithSides.add(new Point(bad.getX()-1,bad.getY()));
+            badPointsWithSides.add(new Point(bad.getX(),bad.getY()-1));
+	    }
+	    for (int v=updatedCorners.size()-1;v==-1;v--){
+	        
+	    }
 	}
 	/**
 	 * @return
@@ -214,31 +223,20 @@ public class OurBoard {
 		int x = placement.getLocation().getX();
 		int y = placement.getLocation().getY();
 		Block rotated = placement.getRotatedBlock();
-		boolean isDiagConnection = false;
 		for(BlockPlacement otherBlocks : boardBlockPlacements) {
 			int ox = otherBlocks.getLocation().getX();
 			int oy = otherBlocks.getLocation().getY();
 			Block otherRotated = otherBlocks.getRotatedBlock();
 			for(Point offset : rotated.getOffsets()) {
 				for(Point otherOffset : otherRotated.getOffsets()) {
-					int x1 = offset.getX() + x;
-					int x2 = otherOffset.getX() + ox;
-					int y1 = offset.getY() + y;
-				    int y2 = otherOffset.getY() + oy;
-				    //Check for overlaps or side to side connections
-					if(((x1 == x2) && (y1 == y2)) ||
-						(Math.abs(x1 - x2) == 1 && Math.abs(y1-y2) == 0) ||
-						(Math.abs(x1 - x2) == 0 && Math.abs(y1-y2) == 1)   ) {
+					if((offset.getX() + x == otherOffset.getX() + ox) && (offset.getY() + y == otherOffset.getY() + oy)) {
 						return false;
-					}
-					//Check if there is a diagonal connection
-					if((Math.abs(x1 - x2) == 1 && Math.abs(y1-y2) == 1)) {
-						isDiagConnection = true;
 					}
 				}
 			}
 		}
-		return isDiagConnection;
+		
+		return true;
 	}
 	
 	public int getScore() {
