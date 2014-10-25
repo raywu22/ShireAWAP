@@ -19,6 +19,8 @@ public class OurBoard {
 		boardBlockPlacements = new ArrayList<>();
 		corners = new ArrayList<>();
 		availableBlocks = new ArrayList<>();
+		
+		corners.add(game.getStartCorner());
 		pointsCovered = new ArrayList<Point>();
 	}
 	
@@ -140,8 +142,17 @@ public class OurBoard {
             badPointsWithSides.add(new Point(bad.getX()-1,bad.getY()));
             badPointsWithSides.add(new Point(bad.getX(),bad.getY()-1));
 	    }
+	    for (int i=0;i<originalState.getState().getDimension();i++){
+	        for (int j=0;j<originalState.getState().getDimension();j++){
+	            if (originalState.getState().getBoard().get(i).get(j)!=-1){
+	                badPointsWithSides.add(new Point(i,j));
+	            }
+	        }
+	    }
 	    for (int v=updatedCorners.size()-1;v==-1;v--){
-	        
+	        if (badPointsWithSides.contains(updatedCorners.get(v))){
+	            updatedCorners.remove(v);
+	        }
 	    }
 	    this.corners=updatedCorners;
 	}
