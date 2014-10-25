@@ -9,14 +9,6 @@ public class OurBoard {
 	private ArrayList<BlockPlacement> boardBlockPlacements;
 	private List<Point> corners;
 	private List<Block> availableBlocks;
-	
-<<<<<<< HEAD
-	public OurBoard(List<Point> corner, ArrayList<Block> blocks,List<Point> filledPoints, List<Block> avalBlocks) {
-		this.corners         = corner;
-		this.boardBlocks     = blocks;
-		this.allFilledPoints = filledPoints;
-		this.availableBlocks = avalBlocks;
-=======
 	private int score;
 
 	/**
@@ -30,7 +22,6 @@ public class OurBoard {
 	    //TODO set this.corners to new available corners
 		this.corners = corner;
 		this.boardBlockPlacements = blockPlacements;
->>>>>>> 755fce884d3d46fb53c49f99698824833eba31c9
 	}
 	
 	/**
@@ -99,7 +90,7 @@ public class OurBoard {
 				}
 			}	
 		}
-		return null;
+		return orderedPoints;
 	}
 	
 	
@@ -108,6 +99,9 @@ public class OurBoard {
 	 * @return
 	 */
 	public ArrayList<Block> orderBlocksForPath() {
+		for(Block block : availableBlocks) {
+			
+		}
 		return null;
 	}
 	
