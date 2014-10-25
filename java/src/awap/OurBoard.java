@@ -99,10 +99,36 @@ public class OurBoard {
 	 * @return
 	 */
 	public ArrayList<Block> orderBlocksForPath() {
+		ArrayList<Block>   orderedBlocks = new ArrayList<Block>();
+		ArrayList<Integer> manhattanDist = new ArrayList<Integer>();
 		for(Block block : availableBlocks) {
-			
+			List<Point> blockPoints = block.getOffsets();
+			List<Integer> xs = new ArrayList<Integer>();
+			List<Integer> ys = new ArrayList<Integer>();
+			int max = 0;
+			for (Point p1 : blockPoints) {
+				for(Point p2: blockPoints) {
+					if(max < Math.abs(p1.getX() - p2.getX()) +
+							 Math.abs(p1.getY() - p2.getY())) {
+						max = Math.abs(p1.getX() - p2.getX()) +
+								 Math.abs(p1.getY() - p2.getY());
+					}
+				}
+			}
+			if(manhattanDist.isEmpty()) {
+				manhattanDist.add(max);
+				orderedBlocks.add(block);
+			}
+			else {
+				for(int i = 0; i < manhattanDist.size(); i++) {
+					if(manhattanDist.get(i) < max) {
+						manhattanDist.add(i, max);
+						orderedBlocks.add(i, block);
+					}
+				}
+			}	
 		}
-		return null;
+		return orderedBlocks;
 	}
 	
 	public int getScore() {
