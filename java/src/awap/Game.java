@@ -27,11 +27,25 @@ public class Game {
 
 		return Optional.absent();
 	}
-
+	
+	enum SearchType {
+		DFS, BFS
+	}
+	
 	private Move findMove() {
 		
-		BlockPlacement toPlace = Search.search(currentBoard, this);
-		
+		SearchType search = SearchType.DFS;
+		BlockPlacement toPlace;
+		if(search == SearchType.DFS) {
+			//DFS - go to a place
+			Point goalPoint = new Point(5, 15);
+			toPlace = Search.searchForPoint(currentBoard, this, goalPoint);
+		}
+		else { //if(search == SearchType.BFS) {
+			//BFS - expand nicely
+			toPlace = Search.search(currentBoard, this);
+		}
+
 		currentBoard.addBlock(toPlace);
 		return new Move(state.getBlocks().indexOf(toPlace.getBlock()), toPlace.getRotation(), toPlace.getLocation().getX(), toPlace.getLocation().getY());
 		/*
