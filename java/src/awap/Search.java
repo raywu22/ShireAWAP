@@ -37,10 +37,10 @@ public class Search {
 		
 		if(agenda.get(0) != null) {
 			// decide which to place first
-			List<BlockPlacement> originalBlocksUsed = originalState.getBlocksUsed();
+			List<BlockPlacement> originalBlocksUsed = originalState.getBlockPlacements();
 			int closestDist = Integer.MAX_VALUE;
 			BlockPlacement blockToPlace = null;
-			for(BlockPlacement block : agenda.get(0).getBlocksUsed()) {
+			for(BlockPlacement block : agenda.get(0).getBlockPlacements()) {
 				if(originalBlocksUsed.contains(block))
 					continue;
 				if(originalState.checkForConflicts(blockToPlace)) { //TODO: implement this
@@ -99,6 +99,7 @@ public class Search {
 		if(bestState != null) {
 			// decide which to place first
 			List<BlockPlacement> originalBlocksUsed = originalState.getBlockPlacements();
+			int bestSize = 0;
 			int closestDist = Integer.MAX_VALUE;
 			BlockPlacement blockToPlace = null;
 			for(BlockPlacement block : bestState.getBlockPlacements()) {
@@ -108,7 +109,13 @@ public class Search {
 				Point p = block.getLocation();
 				int dist = game.mahattanDistanceToNearestCompetitor(p);
 				
-				if(dist < closestDist) {
+				int size = block.getBlock().getOffsets().size(); 
+				if(size > bestSize) {
+					closestDist = dist;
+					bestSize = size;
+					blockToPlace = block;
+				}
+				else if(size == bestSize && dist < closestDist) {
 					closestDist = dist;
 					blockToPlace = block;
 				}
