@@ -11,6 +11,7 @@ public class OurBoard {
 	private List<BlockPlacement> boardBlockPlacements;
 	private List<Point> corners;
 	private List<Block> availableBlocks;
+	private List<Point> pointsCovered;
 	private int score;
 
 	public OurBoard(Game game) {
@@ -18,6 +19,7 @@ public class OurBoard {
 		boardBlockPlacements = new ArrayList<>();
 		corners = new ArrayList<>();
 		availableBlocks = new ArrayList<>();
+		pointsCovered = new ArrayList<Point>();
 	}
 	
 	/**
@@ -28,11 +30,12 @@ public class OurBoard {
 	 *                       isOurPoint = 0 if it is our point and isOurPoint = 1 if other point
 	 */
 
-	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements, int score) {
+	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements, int score, List<Point> points) {
 	    //TODO set this.corners to new available corners
 		this.corners = corner;
 		this.boardBlockPlacements = blockPlacements;
 		this.score = score;
+		this.pointsCovered = points;
 	}
 	
 	public void setGame(Game game) {
@@ -53,6 +56,11 @@ public class OurBoard {
 	public OurBoard addBlock(BlockPlacement blockPlacement) {
 	    Point pointAddingTo = blockPlacement.getLocation();
 	    Block blockToAdd = blockPlacement.getBlock();
+	    List<Point> pointsToAdd = new ArrayList<Point>();
+	    for(Point o : blockToAdd.getOffsets()) {
+	    	pointsToAdd.add(o.add(blockPlacement.getLocation()));
+	    }
+	    pointsToAdd.addAll(pointsCovered);
 	    List<BlockPlacement> copyOfBlockPlacements = new ArrayList<>(this.getBlockPlacements());
 	    copyOfBlockPlacements.add(blockPlacement);
 	    int scoreOfNewBlock = blockToAdd.getOffsets().size();
@@ -65,7 +73,7 @@ public class OurBoard {
 		    		scoreOfNewBlock *= 3;
 		    }
 	    }
-	    return new OurBoard(this.getCorners(),copyOfBlockPlacements, this.score + scoreOfNewBlock);
+	    return new OurBoard(this.getCorners(),copyOfBlockPlacements, this.score + scoreOfNewBlock, pointsToAdd);
 	}
 	/**
 	 * @return block placements in our board
@@ -147,10 +155,10 @@ public class OurBoard {
 	    this.corners=updatedCorners;
 	}
 	/**
-	 * @return
+	 * @return points covered by our grid
 	 */
 	public List<Point> getPoints() {
-		return null;
+		return pointsCovered;
 	}
 	
 	/**
