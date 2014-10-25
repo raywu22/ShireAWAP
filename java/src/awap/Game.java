@@ -15,6 +15,10 @@ public class Game {
 			Logger.log(newState.getError().get());
 			return Optional.absent();
 		}
+		
+		if(currentBoard == null) {
+			currentBoard = new OurBoard(this);
+		}
 
 		if (newState.getMove() != -1) {
 			return Optional.fromNullable(findMove());
@@ -24,38 +28,52 @@ public class Game {
 		if (newState.getNumber().isPresent()) {
 			number = newState.getNumber().get();
 		}
-
+		
+		
+		
 		return Optional.absent();
 	}
-
+	
+	enum SearchType {
+		DFS, BFS
+	}
+	
 	private Move findMove() {
-		/*
 		Logger.log("findMove called");
 		
-		BlockPlacement toPlace = Search.search(currentBoard, this);
+		
+		SearchType search = SearchType.DFS;
+		BlockPlacement toPlace;
+		if(search == SearchType.DFS) {
+			//DFS - go to a place
+			Point goalPoint = new Point(5, 15);
+			toPlace = Search.searchForPoint(currentBoard, this, goalPoint);
+		}
+		else { //if(search == SearchType.BFS) {
+			//BFS - expand nicely
+			toPlace = Search.search(currentBoard, this);
+		}
 		
 		Logger.log("search finished");
-		
 		currentBoard.addBlock(toPlace);
 		return new Move(state.getBlocks().indexOf(toPlace.getBlock()), toPlace.getRotation(), toPlace.getLocation().getX(), toPlace.getLocation().getY());
-		*/
 		
-		int N = state.getDimension();
-		List<Block> blocks = state.getBlocks().get(number);
-
-		for (int x = 0; x < N; x++) {
-			for (int y = 0; y < N; y++) {
-				for (int rot = 0; rot < 4; rot++) {
-					for (int i = 0; i < blocks.size(); i++) {
-						if (canPlace(blocks.get(i).rotate(rot), new Point(x, y))) {
-							return new Move(i, rot, x, y);
-						}
-					}
-				}
-			}
-		}
-
-		return new Move(0, 0, 0, 0);
+//		int N = state.getDimension();
+//		List<Block> blocks = state.getBlocks().get(number);
+//
+//		for (int x = 0; x < N; x++) {
+//			for (int y = 0; y < N; y++) {
+//				for (int rot = 0; rot < 4; rot++) {
+//					for (int i = 0; i < blocks.size(); i++) {
+//						if (canPlace(blocks.get(i).rotate(rot), new Point(x, y))) {
+//							return new Move(i, rot, x, y);
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		return new Move(0, 0, 0, 0);
 	}
 
 	private int getPos(int x, int y) {
