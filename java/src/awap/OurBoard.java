@@ -152,6 +152,7 @@ public class OurBoard {
 	            updatedCorners.remove(v);
 	        }
 	    }
+	    System.out.println(updatedCorners);
 	    this.corners=updatedCorners;
 	}
 	/**
