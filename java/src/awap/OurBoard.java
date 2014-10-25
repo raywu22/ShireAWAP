@@ -1,16 +1,14 @@
 package awap;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class OurBoard {
 	Game originalState; // this is the state that the server has told us is the current state (before we start a search)
 	
-	private ArrayList<BlockPlacement> boardBlockPlacements;
+	private List<BlockPlacement> boardBlockPlacements;
 	private List<Point> corners;
 	private List<Block> availableBlocks;
-	
 	private int score;
 
 	public OurBoard(Game game) {
@@ -27,7 +25,7 @@ public class OurBoard {
 	 * @param filledPoints - ALL filled points on the board in the for List(isOurPoint,xCoord,yCoord) where
 	 *                       isOurPoint = 0 if it is our point and isOurPoint = 1 if other point
 	 */
-	public OurBoard(List<Point> corner, ArrayList<BlockPlacement> blockPlacements) {
+	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements) {
 	    //TODO set this.corners to new available corners
 		this.corners = corner;
 		this.boardBlockPlacements = blockPlacements;
@@ -39,8 +37,15 @@ public class OurBoard {
 	 * @param p - point where the block is placed
 	 * @return OurBoard
 	 */
-	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo) {
-	    
+	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo,int rotation) {
+	    BlockPlacement toAddBlockPlacement = new BlockPlacement(blockToAdd,pointAddingTo,rotation);
+	    List<BlockPlacement> copyOfBlockPlacements = new ArrayList<>(this.getBlockPlacements());
+	    copyOfBlockPlacements.add(toAddBlockPlacement);
+	    return new OurBoard(this.getCorners(),copyOfBlockPlacements);
+	}
+	
+	public List<BlockPlacement> getBlockPlacements(){
+	    return this.boardBlockPlacements;
 	}
 	
 	/**
@@ -81,15 +86,36 @@ public class OurBoard {
 	 * @return
 	 */
 	public ArrayList<Point> orderCornersForPath(Point goal) {
-		return null;
+		ArrayList<Point> orderedPoints = new ArrayList<Point>();
+		ArrayList<Integer> orderedDist = new ArrayList<Integer>();
+		for(Point corner : corners) {
+			int dist = Math.abs((goal.getX() - corner.getX()) + (goal.getY() - goal.getY()));
+//			distMap.put(corner, dist);
+			if(orderedDist.isEmpty()) {
+				orderedDist.add(dist);
+				orderedPoints.add(corner);
+			}
+			else {
+				for(int i = orderedDist.size()-1; i >= 0; i--) {
+					if(orderedDist.get(i) > dist) {
+						orderedDist.add(i, dist);
+						orderedPoints.add(i, corner);
+					}
+				}
+			}	
+		}
+		return orderedPoints;
 	}
+	
 	
 	/**
 	 * Order available blocks based on largest Manhattan distance
 	 * @return
 	 */
-	public ArrayList<Point> orderBlocksForPath() {
-		
+	public ArrayList<Block> orderBlocksForPath() {
+		for(Block block : availableBlocks) {
+			
+		}
 		return null;
 	}
 	
