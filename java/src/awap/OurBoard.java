@@ -135,6 +135,7 @@ public class OurBoard {
 	    for (int v=updatedCorners.size()-1;v==-1;v--){
 	        
 	    }
+	    this.corners=updatedCorners;
 	}
 	/**
 	 * @return
