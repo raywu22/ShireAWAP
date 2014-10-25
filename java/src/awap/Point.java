@@ -27,6 +27,19 @@ public class Point {
 	public boolean equals(Point p) {
 		return x == p.x && y == p.y;
 	}
+	
+	public boolean equals(Object other) {
+		if(other instanceof Point) {
+			Point otherPoint = (Point)other;
+			return equals(otherPoint);
+		}
+		else
+			return false;
+	}
+	
+	public int hashCode() {
+		return 31 * x + 37 * y;
+	}
 
 	public Point rotate(int numRotations) {
 		switch (numRotations) {

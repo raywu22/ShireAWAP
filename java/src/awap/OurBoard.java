@@ -1,19 +1,25 @@
 package awap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Set;
 
 public class OurBoard {
-	private ArrayList<BlockPlacement> boardBlockPlacements;
+	Game originalState; // this is the state that the server has told us is the current state (before we start a search)
+	
+	private List<BlockPlacement> boardBlockPlacements;
 	private List<Point> corners;
 	private List<Block> availableBlocks;
 	private int score;
 
+	public OurBoard(Game game) {
+		this.originalState = game;
+		boardBlockPlacements = new ArrayList<>();
+		corners = new ArrayList<>();
+		availableBlocks = new ArrayList<>();
+	}
+	
 	/**
 	 * 
 	 * @param corner - gives list of already available corners
@@ -21,10 +27,16 @@ public class OurBoard {
 	 * @param filledPoints - ALL filled points on the board in the for List(isOurPoint,xCoord,yCoord) where
 	 *                       isOurPoint = 0 if it is our point and isOurPoint = 1 if other point
 	 */
-	public OurBoard(List<Point> corner, ArrayList<BlockPlacement> blockPlacements) {
+
+	public OurBoard(List<Point> corner, List<BlockPlacement> blockPlacements, int score) {
 	    //TODO set this.corners to new available corners
 		this.corners = corner;
 		this.boardBlockPlacements = blockPlacements;
+		this.score = score;
+	}
+	
+	public void setGame(Game game) {
+		this.originalState = game;
 	}
 	
 	/**
@@ -34,10 +46,26 @@ public class OurBoard {
 	 * @return OurBoard
 	 */
 	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo,int rotation) {
-	    BlockPlacement toAddBlockPlacement = new BlockPlacement(blockToAdd,pointAddingTo,rotation);
-	    ArrayList<BlockPlacement> copyOfBlockPlacements = new ArrayList<>(this.getBlockPlacements());
-	    copyOfBlockPlacements.add(toAddBlockPlacement);
-	    return new OurBoard(this.getCorners(),copyOfBlockPlacements);
+		BlockPlacement toAddBlockPlacement = new BlockPlacement(blockToAdd,pointAddingTo,rotation);
+		return addBlock(toAddBlockPlacement);
+	}
+	
+	public OurBoard addBlock(BlockPlacement blockPlacement) {
+	    Point pointAddingTo = blockPlacement.getLocation();
+	    Block blockToAdd = blockPlacement.getBlock();
+	    List<BlockPlacement> copyOfBlockPlacements = new ArrayList<>(this.getBlockPlacements());
+	    copyOfBlockPlacements.add(blockPlacement);
+	    int scoreOfNewBlock = blockToAdd.getOffsets().size();
+	    Block rotated = blockPlacement.getRotatedBlock();
+	    for(List<Integer> bonus : originalState.getState().getBonusSquares()) {
+		    for(Point offset : rotated.getOffsets()) {
+		    	int x = offset.getX() + pointAddingTo.getX();
+		    	int y = offset.getY() + pointAddingTo.getY();
+		    	if(bonus.get(0) == x && bonus.get(1) == y)
+		    		scoreOfNewBlock *= 3;
+		    }
+	    }
+	    return new OurBoard(this.getCorners(),copyOfBlockPlacements, this.score + scoreOfNewBlock);
 	}
 	/**
 	 * @return block placements in our board
@@ -92,16 +120,8 @@ public class OurBoard {
 	 * 
 	 * @return
 	 */
-	public List<BlockPlacement> getBlocksUsed() {
-		return null;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
 	public List<Block> getBlocksAvailable() {
-		return null;
+		return originalState.getBlocks();
 	}
 	
 	/**
@@ -137,10 +157,59 @@ public class OurBoard {
 	 * @return
 	 */
 	public ArrayList<Block> orderBlocksForPath() {
+		ArrayList<Block>   orderedBlocks = new ArrayList<Block>();
+		ArrayList<Integer> manhattanDist = new ArrayList<Integer>();
 		for(Block block : availableBlocks) {
-			
+			List<Point> blockPoints = block.getOffsets();
+			List<Integer> xs = new ArrayList<Integer>();
+			List<Integer> ys = new ArrayList<Integer>();
+			int max = 0;
+			for (Point p1 : blockPoints) {
+				for(Point p2: blockPoints) {
+					if(max < Math.abs(p1.getX() - p2.getX()) +
+							 Math.abs(p1.getY() - p2.getY())) {
+						max = Math.abs(p1.getX() - p2.getX()) +
+								 Math.abs(p1.getY() - p2.getY());
+					}
+				}
+			}
+			if(manhattanDist.isEmpty()) {
+				manhattanDist.add(max);
+				orderedBlocks.add(block);
+			}
+			else {
+				for(int i = 0; i < manhattanDist.size(); i++) {
+					if(manhattanDist.get(i) < max) {
+						manhattanDist.add(i, max);
+						orderedBlocks.add(i, block);
+					}
+				}
+			}	
 		}
-		return null;
+		return orderedBlocks;
+	}
+	
+	public boolean checkForConflicts(BlockPlacement placement) {
+		boolean canPlace = originalState.canPlace(placement.getBlock().rotate(placement.getRotation()), placement.getLocation());
+		if(!canPlace)
+			return false;
+		int x = placement.getLocation().getX();
+		int y = placement.getLocation().getY();
+		Block rotated = placement.getRotatedBlock();
+		for(BlockPlacement otherBlocks : boardBlockPlacements) {
+			int ox = otherBlocks.getLocation().getX();
+			int oy = otherBlocks.getLocation().getY();
+			Block otherRotated = otherBlocks.getRotatedBlock();
+			for(Point offset : rotated.getOffsets()) {
+				for(Point otherOffset : otherRotated.getOffsets()) {
+					if((offset.getX() + x == otherOffset.getX() + ox) && (offset.getY() + y == otherOffset.getY() + oy)) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	public int getScore() {
