@@ -19,6 +19,10 @@ public class Point {
 	public Point add(Point p) {
 		return new Point(x + p.x, y + p.y);
 	}
+	
+	public Point subtract(Point p) {
+		return new Point(x - p.x, y - p.y);
+	}
 
 	public boolean equals(Point p) {
 		return x == p.x && y == p.y;
