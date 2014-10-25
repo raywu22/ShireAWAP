@@ -7,10 +7,17 @@ import java.util.List;
 public class OurBoard {
 	private ArrayList<Block> boardBlocks;
 	private List<Point> corners;
-	private List<Point> allFilledPoints;
+	private List<List<Integer>> allFilledPoints;
 	private List<Block> availableBlocks;
-	
-	public OurBoard(List<Point> corner, ArrayList<Block> blocks,List<Point> filledPoints) {
+	/**
+	 * 
+	 * @param corner - gives list of already available corners
+	 * @param blocks - list of blocks already used in our board
+	 * @param filledPoints - ALL filled points on the board in the for List(isOurPoint,xCoord,yCoord) where
+	 *                       isOurPoint = 0 if it is our point and isOurPoint = 1 if other point
+	 */
+	public OurBoard(List<Point> corner, ArrayList<BlockPlacements> blocks) {
+	    //TODO set this.corners to new available corners
 		this.corners         = corner;
 		this.boardBlocks     = blocks;
 		this.allFilledPoints= filledPoints;
@@ -19,13 +26,12 @@ public class OurBoard {
 	
 	/**
 	 * producer method
-	 * @param b - block to be placed, assume that it is always able to be added
+	 * @param b - block to be placed, ASSUME that it is always able to be added
 	 * @param p - point where the block is placed
 	 * @return OurBoard
 	 */
 	public OurBoard addBlock(Block blockToAdd, Point pointAddingTo) {
-	    
-		return null;
+	    		
 	}
 	
 	/**
